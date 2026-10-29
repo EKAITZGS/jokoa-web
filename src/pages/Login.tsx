@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { ApiError } from '../api';
+import { api, ApiError } from '../api';
+import { useToast } from '../toast';
 import { useAuth } from '../auth';
 import { Campo } from '../components/Campos';
 
@@ -12,8 +13,18 @@ export default function Login() {
   const [ocupado, setOcupado] = useState(false);
   const navegar = useNavigate();
   const { state } = useLocation();
+  const aviso = useToast();
 
   if (usuario) return <Navigate to={state?.desde ?? '/juegos'} replace />;
+
+  const reenviar = async () => {
+    try {
+      await api.post('/verificar/reenviar', { email: email.trim() });
+      aviso('Si la cuenta existe, te hemos enviado otro correo');
+    } catch (err) {
+      aviso(err instanceof ApiError ? err.message : 'No se pudo reenviar el correo');
+    }
+  };
 
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +39,9 @@ export default function Login() {
       navegar(state?.desde ?? '/juegos', { replace: true });
     } catch (err) {
       const sinRed = err instanceof ApiError && err.status === 0;
-      setErrores({ general: sinRed ? 'No se pudo conectar con el servidor' : 'Email o contraseña incorrectos, o la cuenta está desactivada' });
+      // Si la cuenta está sin verificar o desactivada, el servidor lo dice con claridad
+      const claro = err instanceof ApiError && err.status === 401 && /verificar|desactivada/i.test(err.message);
+      setErrores({ general: sinRed ? 'No se pudo conectar con el servidor' : claro ? (err as ApiError).message : 'Email o contraseña incorrectos', sinVerificar: claro && /verificar/i.test((err as ApiError).message) ? '1' : '' });
     } finally {
       setOcupado(false);
     }
@@ -53,6 +66,9 @@ export default function Login() {
           <Campo etiqueta="Email" type="email" value={email} onChange={setEmail} error={errores.email} autoComplete="username" />
           <Campo etiqueta="Contraseña" type="password" value={password} onChange={setPassword} error={errores.password} autoComplete="current-password" />
           {errores.general && <div className="error-texto">{errores.general}</div>}
+          {errores.sinVerificar && (
+            <button className="btn tonal bloque" type="button" onClick={reenviar}>Reenviar el correo de verificación</button>
+          )}
           <button className="btn grande bloque" type="submit" disabled={ocupado}>Entrar</button>
         </form>
         <Link className="enlace" to="/registro">¿No tienes cuenta? Regístrate</Link>

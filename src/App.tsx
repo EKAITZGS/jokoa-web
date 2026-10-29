@@ -18,6 +18,7 @@ import Perfil from './pages/Perfil';
 import Registro from './pages/Registro';
 import Soporte from './pages/Soporte';
 import Tiendas from './pages/Tiendas';
+import Verificar from './pages/Verificar';
 
 const Cargando = () => (
   <div className="barra-carga" role="progressbar" aria-label="Cargando" />
@@ -54,6 +55,7 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/registro" element={<Registro />} />
+      <Route path="/verificar" element={<Verificar />} />
 
       <Route element={<Layout />}>
         <Route path="/" element={<Inicio />} />
