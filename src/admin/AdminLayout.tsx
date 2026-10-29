@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
 import Icon from '../components/Icon';
 
@@ -14,6 +14,7 @@ const enlaces = [
 export default function AdminLayout() {
   const { salir } = useAuth();
   const navegar = useNavigate();
+  const { pathname } = useLocation();
   return (
     <div className="admin">
       <aside className="admin-lateral">
@@ -44,7 +45,9 @@ export default function AdminLayout() {
         </div>
       </aside>
       <main className="admin-principal">
-        <Outlet />
+        <div key={pathname} className="pag-anim">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
 import { useCart } from '../cart';
@@ -11,12 +11,29 @@ export default function Layout() {
   const { pathname } = useLocation();
   const [menu, setMenu] = useState(false);
   const [abierto, setAbierto] = useState(false);
+  const [elevada, setElevada] = useState(false);
+  const [oculta, setOculta] = useState(false);
+  const ultimo = useRef(0);
 
   useEffect(() => {
     setMenu(false);
     setAbierto(false);
+    setOculta(false);
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  // La cabecera gana sombra al bajar y se esconde al seguir bajando; vuelve en cuanto se sube
+  useEffect(() => {
+    const alMover = () => {
+      const y = window.scrollY;
+      setElevada(y > 8);
+      setOculta(y > 220 && y > ultimo.current + 4);
+      if (y < ultimo.current - 4) setOculta(false);
+      ultimo.current = y;
+    };
+    window.addEventListener('scroll', alMover, { passive: true });
+    return () => window.removeEventListener('scroll', alMover);
+  }, []);
 
   useEffect(() => {
     if (!menu) return;
@@ -29,7 +46,7 @@ export default function Layout() {
 
   return (
     <>
-      <header className="cabecera">
+      <header className={'cabecera' + (elevada ? ' elevada' : '') + (oculta && !abierto && !menu ? ' oculta' : '')}>
         <div className="contenedor barra">
           <button className="icono-btn hamburguesa" type="button" aria-label="Abrir el menú" onClick={() => setAbierto(!abierto)}>
             <Icon nombre="menu" />
@@ -51,7 +68,7 @@ export default function Layout() {
               <>
                 <Link to="/carrito" className="carrito-btn" aria-label={`Carrito, ${unidades} unidades`}>
                   <Icon nombre="carrito" tam={26} />
-                  {unidades > 0 && <span className="num">{unidades}</span>}
+                  {unidades > 0 && <span key={unidades} className="num">{unidades}</span>}
                 </Link>
                 <div className="usuario-menu" onClick={(e) => e.stopPropagation()}>
                   <button className="usuario-btn" type="button" aria-expanded={menu} onClick={() => setMenu(!menu)}>
@@ -84,7 +101,9 @@ export default function Layout() {
         </div>
       </header>
       <main>
-        <Outlet />
+        <div key={pathname} className="pag-anim">
+          <Outlet />
+        </div>
       </main>
       <footer className="pie">
         <div className="contenedor">

@@ -4,6 +4,7 @@ import { api, ApiError } from '../api';
 import { useCart } from '../cart';
 import { Vacio } from '../components/Estados';
 import Icon from '../components/Icon';
+import { useContador } from '../efectos';
 import { esMovil, euros } from '../format';
 import { useToast } from '../toast';
 
@@ -12,6 +13,7 @@ export default function Carrito() {
   const [ocupado, setOcupado] = useState(false);
   const aviso = useToast();
   const navegar = useNavigate();
+  const totalAnim = useContador(total, 600, 2);
 
   const comprar = async () => {
     setOcupado(true);
@@ -50,7 +52,7 @@ export default function Carrito() {
                   <div className="sub">{euros(p.precio)} la unidad · quedan {p.stock}</div>
                   <div className="cantidad" style={{ marginTop: 10 }}>
                     <button type="button" onClick={() => cambiar(p.id, cantidad - 1)} aria-label="Una menos">−</button>
-                    <span>{cantidad}</span>
+                    <span key={cantidad}>{cantidad}</span>
                     <button type="button" onClick={() => cambiar(p.id, cantidad + 1)} aria-label="Una más">+</button>
                   </div>
                 </div>
@@ -66,7 +68,7 @@ export default function Carrito() {
           <aside className="tarjeta resumen">
             <h2>Resumen</h2>
             <div className="fila"><span>Productos</span><span>{unidades}</span></div>
-            <div className="fila total"><span>Total</span><span>{euros(total)}</span></div>
+            <div className="fila total"><span>Total</span><span>{euros(totalAnim)}</span></div>
             <button className="btn grande bloque" type="button" disabled={ocupado} onClick={comprar}>Finalizar compra</button>
             <button className="btn fantasma bloque" type="button" style={{ marginTop: 8 }} onClick={vaciar}>Vaciar carrito</button>
           </aside>

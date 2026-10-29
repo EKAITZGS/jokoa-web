@@ -5,10 +5,10 @@ import { ErrorEstado } from '../components/Estados';
 import Icon from '../components/Icon';
 import type { Tienda } from '../types';
 
-const icono = (sel: boolean) =>
+const icono = (sel: boolean, i = 0, intro = false) =>
   L.divIcon({
-    className: 'pin-tienda',
-    html: `<img src="/pin${sel ? '-sel' : ''}.svg" width="40" height="52" alt="" />`,
+    className: 'pin-tienda' + (sel ? ' sel' : '') + (intro ? ' intro' : ''),
+    html: `<img src="/pin${sel ? '-sel' : ''}.svg" style="--d:${i * 110}ms" width="40" height="52" alt="" />`,
     iconSize: [40, 52],
     iconAnchor: [20, 52],
   });
@@ -20,6 +20,7 @@ export default function Tiendas() {
   const caja = useRef<HTMLDivElement>(null);
   const mapa = useRef<L.Map | null>(null);
   const marcadores = useRef<L.Marker[]>([]);
+  const listos = useRef(false);
 
   const cargar = () => {
     setError(false);
@@ -35,7 +36,7 @@ export default function Tiendas() {
       maxZoom: 16,
       attribution: 'Tiles © Esri',
     }).addTo(m);
-    marcadores.current = tiendas.map((t, i) => L.marker([t.latitud, t.longitud], { icon: icono(i === 0) }).addTo(m).on('click', () => setSel(i)));
+    marcadores.current = tiendas.map((t, i) => L.marker([t.latitud, t.longitud], { icon: icono(i === 0, i, true) }).addTo(m).on('click', () => setSel(i)));
     if (tiendas.length > 1) m.fitBounds(L.latLngBounds(tiendas.map((t) => [t.latitud, t.longitud] as [number, number])), { padding: [60, 60] });
     mapa.current = m;
     return () => {
@@ -45,8 +46,14 @@ export default function Tiendas() {
   }, [tiendas]);
 
   useEffect(() => {
+    // La primera vez se deja la animación de entrada de los pines
+    if (!marcadores.current.length) return;
+    if (!listos.current) {
+      listos.current = true;
+      return;
+    }
     marcadores.current.forEach((m, i) => {
-      m.setIcon(icono(i === sel));
+      m.setIcon(icono(i === sel, i));
       m.setZIndexOffset(i === sel ? 1000 : 0);
     });
     const t = tiendas?.[sel];

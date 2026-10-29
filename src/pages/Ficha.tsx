@@ -4,6 +4,7 @@ import { api, ApiError } from '../api';
 import { useCart } from '../cart';
 import { ErrorEstado } from '../components/Estados';
 import Icon from '../components/Icon';
+import { volarAlCarrito } from '../efectos';
 import { esMovil, etiquetas, euros } from '../format';
 import { useToast } from '../toast';
 import type { Producto } from '../types';
@@ -51,13 +52,13 @@ export default function Ficha() {
 
   return (
     <div className="contenedor pagina">
-      <Link to={movil ? '/moviles' : '/juegos'} className="migas">
+      <Link to={movil ? '/moviles' : '/juegos'} className="migas" viewTransition>
         <Icon nombre="atras" tam={20} />
         {movil ? 'Móviles' : 'Videojuegos'}
       </Link>
       <div className="ficha">
         <div className={'portada' + (movil ? ' cuadrada' : '')}>
-          <img src={p.imagenes[0]} alt={p.nombre} />
+          <img src={p.imagenes[0]} alt={p.nombre} style={{ ['viewTransitionName' as string]: `foto-${p.id}` } as React.CSSProperties} />
         </div>
         <div>
           <h1>{p.nombre}</h1>
@@ -74,7 +75,7 @@ export default function Ficha() {
           <div className="compra">
             <div className="cantidad" aria-label="Cantidad">
               <button type="button" onClick={() => setCant(Math.max(1, cant - 1))} aria-label="Una menos">−</button>
-              <span>{cant}</span>
+              <span key={cant}>{cant}</span>
               <button type="button" onClick={() => setCant(Math.min(p.stock, cant + 1))} aria-label="Una más">+</button>
             </div>
             <button
@@ -82,6 +83,7 @@ export default function Ficha() {
               type="button"
               disabled={sinStock}
               onClick={() => {
+                volarAlCarrito(document.querySelector('.ficha .portada img'));
                 anadir(p, cant);
                 aviso('Añadido al carrito');
               }}
