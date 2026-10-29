@@ -1,0 +1,92 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--fondo); color: var(--texto); font: 400 16px/1.5 Roboto, system-ui, sans-serif; }
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--azul); outline-offset: 2px; }
+.contenedor { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.solo-lectores { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ---------- Botones: 56 / 48 px, radio 14, pulsado azul noche y escala 0,98 ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border: 0; border-radius: var(--r-boton); background: var(--azul); color: #fff; font-weight: 700; font-size: 16px; line-height: 1; transition: transform 0.15s ease, background-color 0.15s ease; }
+.btn:hover { background: var(--azul-noche); }
+.btn:active { transform: scale(0.98); transition-duration: 0.1s; }
+.btn:disabled { background: var(--azul-tenue); color: var(--texto-2); transform: none; cursor: default; }
+.btn.grande { min-height: 56px; }
+.btn.bloque { display: flex; width: 100%; }
+.btn.coral { background: var(--coral-oscuro); }
+.btn.coral:hover, .btn.coral:active { background: var(--coral-pulsado); }
+.btn.coral:disabled { background: var(--azul-tenue); }
+.btn.tonal { background: var(--azul-claro); color: var(--azul-noche); }
+.btn.tonal:hover { background: #c4dcf0; }
+.btn.contorno { background: transparent; border: 2px solid var(--coral-oscuro); color: var(--coral-oscuro); }
+.btn.contorno:hover { background: var(--coral-tenue); }
+.btn.fantasma { background: transparent; color: var(--azul); }
+.btn.fantasma:hover { background: var(--azul-tenue); }
+.btn.pequeno { min-height: 36px; padding: 0 14px; font-size: 14px; border-radius: 10px; }
+.btn svg { flex: none; }
+.icono-btn { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--texto-2); }
+.icono-btn:hover { background: var(--azul-tenue); color: var(--azul); }
+.icono-btn.peligro:hover { background: var(--coral-tenue); color: var(--coral-oscuro); }
+
+/* ---------- Campos con etiqueta flotante ---------- */
+.campo { position: relative; }
+.campo input, .campo select, .campo textarea { width: 100%; min-height: 56px; padding: 22px 16px 8px; border: 1px solid var(--borde-campo); border-radius: var(--r-campo); background: var(--superficie); font-size: 16px; outline: none; transition: border-color 0.15s; appearance: none; }
+.campo textarea { min-height: 112px; resize: vertical; }
+.campo select { padding-right: 40px; background: var(--superficie) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%235b6b82' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 12px center; }
+.campo label { position: absolute; left: 12px; top: 17px; padding: 0 4px; color: var(--texto-2); font-size: 16px; pointer-events: none; transition: all 0.15s ease; }
+.campo input:focus + label, .campo input:not(:placeholder-shown) + label, .campo textarea:focus + label, .campo textarea:not(:placeholder-shown) + label, .campo select + label { top: -9px; background: var(--superficie); border-radius: 4px; font-size: 12px; }
+.campo input:focus, .campo textarea:focus, .campo select:focus { border: 2px solid var(--azul); padding-left: 15px; }
+.campo input:focus + label, .campo textarea:focus + label, .campo select:focus + label { color: var(--azul); }
+.campo.error input, .campo.error textarea { border: 2px solid var(--coral-oscuro); padding-left: 15px; }
+.campo.error label { color: var(--coral-oscuro); }
+.campo input:disabled { background: var(--azul-tenue); color: var(--texto-2); }
+.campo .ojo { position: absolute; right: 4px; top: 8px; }
+.error-texto { display: flex; align-items: center; gap: 6px; margin: 6px 4px 0; color: var(--coral-oscuro); font-size: 13px; }
+.error-texto::before { content: '!'; display: inline-flex; flex: none; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: var(--coral-oscuro); color: #fff; font-size: 11px; font-weight: 700; }
+.formulario { display: grid; gap: 14px; }
+.fila-campos { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+.casilla { display: flex; align-items: center; gap: 10px; min-height: 48px; font-weight: 500; }
+.casilla input { width: 20px; height: 20px; accent-color: var(--azul); }
+.nota { color: var(--texto-2); font-size: 13px; }
+
+/* ---------- Tarjetas, píldoras y estados ---------- */
+.tarjeta { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--r-tarjeta); box-shadow: var(--sombra-1); }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: var(--azul-claro); color: var(--azul-noche); font-size: 12px; font-weight: 700; line-height: 16px; white-space: nowrap; }
+.chip.contorno { background: transparent; border: 1px solid var(--azul-noche); padding: 4px 11px; }
+.chip.coral { background: var(--coral-tenue); color: var(--coral-oscuro); }
+.chip.gris { background: var(--gris); color: var(--texto); }
+.chip.exito { background: var(--exito-tenue); color: var(--exito); }
+.chip .punto { width: 8px; height: 8px; border-radius: 2px; background: var(--coral-oscuro); }
+.chip .punto.redondo { border-radius: 50%; background: var(--azul-noche); }
+.estado-centro { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 64px 24px; text-align: center; }
+.estado-centro .circulo { display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 50%; background: var(--azul-tenue); color: var(--azul); }
+.estado-centro p { color: var(--texto-2); }
+.barra-carga { position: relative; height: 4px; overflow: hidden; background: var(--azul-claro); }
+.barra-carga::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40%; background: var(--coral); animation: barra 1.4s ease-in-out infinite; }
+@keyframes barra { from { left: -40%; } to { left: 100%; } }
+.pulso { animation: pulso 0.8s ease-in-out infinite alternate; }
+@keyframes pulso { from { opacity: 1; } to { opacity: 0.35; } }
+.entra { opacity: 0; animation: entra 350ms ease-out forwards; animation-delay: calc(var(--i, 0) * 50ms); }
+@keyframes entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Avisos y diálogos ---------- */
+.avisos { position: fixed; left: 20px; bottom: 20px; z-index: 3000; display: grid; gap: 8px; }
+.aviso { max-width: 340px; padding: 14px 18px; border-radius: 12px; background: var(--texto); color: #fff; font-size: 14px; box-shadow: var(--sombra-2); animation: entra 220ms ease-out; }
+.modal-fondo { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, 0.55); animation: fundir 200ms ease-out; }
+.modal { width: min(560px, 100%); max-height: calc(100vh - 32px); overflow: auto; border-radius: var(--r-tarjeta); background: var(--superficie); box-shadow: var(--sombra-3); animation: modal 220ms ease-out; }
+.modal.estrecho { width: min(380px, 100%); }
+.modal-cab { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 8px; }
+.modal-cab h2 { font-size: 20px; font-weight: 500; }
+.modal-cuerpo { padding: 12px 24px 8px; }
+.modal-pie { display: flex; justify-content: flex-end; gap: 8px; padding: 16px 24px 20px; }
+@keyframes fundir { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 560px) { .fila-campos { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 150ms !important; animation-delay: 0ms !important; transition-duration: 0ms !important; }
+}

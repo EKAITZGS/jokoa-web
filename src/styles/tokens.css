@@ -1,0 +1,31 @@
+:root {
+  /* Paleta de Jokoa: la misma que en las apps de Android e Ionic */
+  --azul: #185fa5;
+  --azul-noche: #0f3f6e;
+  --azul-claro: #d6e6f5;
+  --azul-tenue: #eaf2fa;
+  --coral: #d85a30; /* solo decoración */
+  --coral-oscuro: #b8461f;
+  --coral-pulsado: #8f3517;
+  --coral-tenue: #fdeee8;
+  --fondo: #f4f7fb;
+  --superficie: #ffffff;
+  --texto: #1b2430;
+  --texto-2: #5b6b82;
+  --borde: #d5deea;
+  --borde-campo: #6f7f96;
+  --gris: #dce3ec;
+  --exito: #1f6b45;
+  --exito-tenue: #e1f3e9;
+
+  --r-campo: 12px;
+  --r-boton: 14px;
+  --r-tarjeta: 16px;
+  --r-hoja: 24px;
+
+  --sombra-1: 0 1px 2px rgba(27, 36, 48, 0.06), 0 4px 12px rgba(27, 36, 48, 0.06);
+  --sombra-2: 0 2px 4px rgba(27, 36, 48, 0.1), 0 8px 20px rgba(27, 36, 48, 0.12);
+  --sombra-3: 0 8px 16px rgba(27, 36, 48, 0.12), 0 16px 40px rgba(27, 36, 48, 0.18);
+
+  font-family: 'Roboto', system-ui, sans-serif;
+}
