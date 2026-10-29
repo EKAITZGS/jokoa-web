@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 're
 import { api, ApiError } from '../api';
 import { useAuth } from '../auth';
 import { fechaCorta } from '../format';
+import { useNotif } from '../notificaciones';
 import { useToast } from '../toast';
 import type { Mensaje, Ticket } from '../types';
 import Icon from './Icon';
@@ -18,14 +19,16 @@ export default function ChatTicket({ ticket, onClose, onCambio }: { ticket: Tick
   const [enviando, setEnviando] = useState(false);
   const fin = useRef<HTMLDivElement>(null);
   const aviso = useToast();
+  const { refrescar } = useNotif();
 
   const cargar = useCallback(async () => {
     try {
       setMensajes(await api.get<Mensaje[]>(`/tickets/${ticket.id}/mensajes`));
+      refrescar(); // al abrir la conversación el servidor la marca como leída: el contador baja
     } catch {
       /* se vuelve a intentar en el siguiente ciclo */
     }
-  }, [ticket.id]);
+  }, [ticket.id, refrescar]);
 
   // Se actualiza cada pocos segundos mientras la conversación está abierta
   useEffect(() => {

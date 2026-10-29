@@ -170,3 +170,12 @@
 .chat-cerrado { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 12px; background: var(--exito-tenue); color: var(--exito); font-size: 14px; font-weight: 500; }
 @keyframes burbuja { from { opacity: 0; transform: translateY(10px) scale(0.97); } }
 @media (prefers-reduced-motion: reduce) { .burbuja-fila { animation: fundirSolo 0.2s ease-out both !important; } }
+
+/* ---------- Notificaciones de soporte ---------- */
+.insignia { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; margin-left: 8px; padding: 0 6px; border-radius: 10px; background: var(--coral-oscuro); color: #fff; font-size: 12px; font-weight: 700; line-height: 1; animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.nav a::after { pointer-events: none; }
+.insignia.punto-menu { margin-left: 2px; }
+.admin-lateral .insignia { margin-left: auto; }
+.fila-pedido.nuevo { border-color: var(--coral-oscuro); box-shadow: 0 0 0 1px var(--coral-oscuro), var(--sombra-1); }
+.tabla tr.fila-nueva td { background: var(--coral-tenue); }
+.tabla tr.fila-nueva:hover td { background: #fbe4d9; }

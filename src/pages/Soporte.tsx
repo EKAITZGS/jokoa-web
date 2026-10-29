@@ -88,18 +88,18 @@ export default function Soporte() {
         ) : (
           <div className="lista-filas">
             {tickets.map((t, i) => (
-              <div key={t.id} className="tarjeta fila-pedido entra" style={{ ['--i' as string]: i }}>
+              <div key={t.id} className={'tarjeta fila-pedido entra' + (t.no_leidos > 0 ? ' nuevo' : '')} style={{ ['--i' as string]: i }}>
                 <div className="arriba">
-                  <h3>{t.asunto}</h3>
+                  <h3>{t.asunto}{t.no_leidos > 0 && <span className="chip coral" style={{ marginLeft: 10 }}>Nuevo</span>}</h3>
                   <EstadoTicket estado={t.estado} />
                 </div>
                 <div className="sub">{t.departamento} · {t.dispositivo}</div>
                 <div className="txt">{t.descripcion}</div>
                 <div className="nota">Abierto el {fechaCorta(t.fecha_apertura)}</div>
                 <div className="accion">
-                  <button className="btn tonal pequeno" type="button" onClick={() => setChat(t)}>
+                  <button className={'btn pequeno ' + (t.no_leidos > 0 ? 'coral' : 'tonal')} type="button" onClick={() => setChat(t)}>
                     <Icon nombre="chat" tam={18} />
-                    {t.n_mensajes > 0 ? `Conversación (${t.n_mensajes})` : 'Abrir conversación'}
+                    {t.no_leidos > 0 ? `Ver respuesta (${t.no_leidos})` : t.n_mensajes > 0 ? 'Ver conversación' : 'Abrir conversación'}
                   </button>
                 </div>
               </div>

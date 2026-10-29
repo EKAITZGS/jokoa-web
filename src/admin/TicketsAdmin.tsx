@@ -79,8 +79,8 @@ export default function TicketsAdmin() {
               <thead><tr><th>Ticket</th><th>Cliente</th><th>Departamento</th><th>Estado</th><th>Abierto</th><th /></tr></thead>
               <tbody>
                 {visibles.map((t) => (
-                  <tr key={t.id}>
-                    <td><div className="principal">{t.asunto}</div><div className="secundario">{t.dispositivo}</div></td>
+                  <tr key={t.id} className={t.no_leidos > 0 ? 'fila-nueva' : undefined}>
+                    <td><div className="principal">{t.asunto}{t.no_leidos > 0 && <span className="chip coral" style={{ marginLeft: 8 }}>Nuevo</span>}</div><div className="secundario">{t.dispositivo}</div></td>
                     <td>{t.usuario ?? `Usuario ${t.usuario_id}`}</td>
                     <td>{t.departamento}</td>
                     <td>
@@ -93,7 +93,7 @@ export default function TicketsAdmin() {
                     <td>{fechaCorta(t.fecha_apertura)}</td>
                     <td>
                       <div className="acciones">
-                        <button className="btn pequeno tonal" type="button" aria-label={`Responder ${t.asunto}`} onClick={() => setVer(t)}><Icon nombre="chat" tam={18} />{t.n_mensajes > 0 ? `Responder (${t.n_mensajes})` : 'Responder'}</button>
+                        <button className={'btn pequeno ' + (t.no_leidos > 0 ? 'coral' : 'tonal')} type="button" aria-label={`Responder ${t.asunto}`} onClick={() => setVer(t)}><Icon nombre="chat" tam={18} />{t.no_leidos > 0 ? `Responder (${t.no_leidos})` : 'Responder'}</button>
                         <button className="icono-btn peligro" type="button" aria-label={`Eliminar ${t.asunto}`} onClick={() => setBorrando(t)}><Icon nombre="basura" /></button>
                       </div>
                     </td>

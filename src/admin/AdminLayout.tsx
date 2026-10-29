@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
+import { useNotif } from '../notificaciones';
 import Icon from '../components/Icon';
 
 const enlaces = [
@@ -13,6 +14,7 @@ const enlaces = [
 
 export default function AdminLayout() {
   const { salir } = useAuth();
+  const { total: sinLeer } = useNotif();
   const navegar = useNavigate();
   const { pathname } = useLocation();
   return (
@@ -30,6 +32,7 @@ export default function AdminLayout() {
             <NavLink key={e.a} to={e.a} end={e.fin} className={({ isActive }) => (isActive ? 'activo' : undefined)}>
               <Icon nombre={e.i} />
               <span>{e.t}</span>
+              {e.a === '/admin/tickets' && sinLeer > 0 && <b key={sinLeer} className="insignia" aria-label={`${sinLeer} mensajes sin leer`}>{sinLeer}</b>}
             </NavLink>
           ))}
         </nav>

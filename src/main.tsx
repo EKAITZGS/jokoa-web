@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './auth';
 import { CartProvider } from './cart';
+import { NotifProvider } from './notificaciones';
 import { ToastProvider } from './toast';
 import './styles/tokens.css';
 import './styles/base.css';
@@ -34,9 +35,11 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <ToastProvider>
         <AuthProvider>
-          <CartProvider>
-            <App />
-          </CartProvider>
+          <NotifProvider>
+            <CartProvider>
+              <App />
+            </CartProvider>
+          </NotifProvider>
         </AuthProvider>
       </ToastProvider>
     </BrowserRouter>

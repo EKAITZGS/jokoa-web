@@ -80,6 +80,7 @@ export interface Ticket {
   fecha_apertura: string;
   fecha_cierre: string | null;
   n_mensajes: number;
+  no_leidos: number;
 }
 
 export interface Mensaje {
