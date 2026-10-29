@@ -7,10 +7,11 @@ interface Props {
   children: ReactNode;
   pie?: ReactNode;
   estrecho?: boolean;
+  ancho?: boolean;
 }
 
 // Diálogo: radio 16, sombra de nivel 3, fondo oscurecido al 55 % y entrada de 220 ms
-export default function Modal({ titulo, onClose, children, pie, estrecho }: Props) {
+export default function Modal({ titulo, onClose, children, pie, estrecho, ancho }: Props) {
   useEffect(() => {
     const alPulsar = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', alPulsar);
@@ -18,7 +19,7 @@ export default function Modal({ titulo, onClose, children, pie, estrecho }: Prop
   }, [onClose]);
   return (
     <div className="modal-fondo" onMouseDown={onClose}>
-      <div className={'modal' + (estrecho ? ' estrecho' : '')} role="dialog" aria-modal="true" aria-label={titulo} onMouseDown={(e) => e.stopPropagation()}>
+      <div className={'modal' + (estrecho ? ' estrecho' : '') + (ancho ? ' ancho' : '')} role="dialog" aria-modal="true" aria-label={titulo} onMouseDown={(e) => e.stopPropagation()}>
         <div className="modal-cab">
           <h2>{titulo}</h2>
           <button className="icono-btn" type="button" onClick={onClose} aria-label="Cerrar">

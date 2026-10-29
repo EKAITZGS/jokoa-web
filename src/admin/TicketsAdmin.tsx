@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '../api';
 import { Barra, ErrorEstado } from '../components/Estados';
 import Icon from '../components/Icon';
+import ChatTicket from '../components/ChatTicket';
 import Modal from '../components/Modal';
 import { fechaCorta } from '../format';
-import { EstadoTicket } from '../pages/Soporte';
 import { useToast } from '../toast';
 import type { Ticket } from '../types';
 
@@ -93,7 +93,7 @@ export default function TicketsAdmin() {
                     <td>{fechaCorta(t.fecha_apertura)}</td>
                     <td>
                       <div className="acciones">
-                        <button className="icono-btn" type="button" aria-label={`Ver ${t.asunto}`} onClick={() => setVer(t)}><Icon nombre="ojo" /></button>
+                        <button className="btn pequeno tonal" type="button" aria-label={`Responder ${t.asunto}`} onClick={() => setVer(t)}><Icon nombre="chat" tam={18} />{t.n_mensajes > 0 ? `Responder (${t.n_mensajes})` : 'Responder'}</button>
                         <button className="icono-btn peligro" type="button" aria-label={`Eliminar ${t.asunto}`} onClick={() => setBorrando(t)}><Icon nombre="basura" /></button>
                       </div>
                     </td>
@@ -105,16 +105,7 @@ export default function TicketsAdmin() {
           </div>
         </div>
       )}
-      {ver && (
-        <Modal titulo={ver.asunto} onClose={() => setVer(null)} pie={<button className="btn" type="button" onClick={() => setVer(null)}>Cerrar</button>}>
-          <div style={{ display: 'grid', gap: 10 }}>
-            <div><EstadoTicket estado={ver.estado} /></div>
-            <div className="secundario"><b>{ver.departamento}</b> · {ver.dispositivo} · {ver.usuario}</div>
-            <p style={{ whiteSpace: 'pre-line' }}>{ver.descripcion}</p>
-            <div className="nota">Abierto el {fechaCorta(ver.fecha_apertura)}{ver.fecha_cierre ? ` · cerrado el ${fechaCorta(ver.fecha_cierre)}` : ''}</div>
-          </div>
-        </Modal>
-      )}
+      {ver && <ChatTicket ticket={ver} onClose={() => { setVer(null); cargar(); }} onCambio={cargar} />}
       {borrando && (
         <Modal
           estrecho

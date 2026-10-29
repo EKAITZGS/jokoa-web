@@ -3,6 +3,7 @@ import { api, ApiError } from '../api';
 import { AreaTexto, Campo, Selector } from '../components/Campos';
 import { Barra, ErrorEstado, Vacio } from '../components/Estados';
 import Icon from '../components/Icon';
+import ChatTicket from '../components/ChatTicket';
 import Modal from '../components/Modal';
 import { fechaCorta } from '../format';
 import { useToast } from '../toast';
@@ -19,6 +20,7 @@ export default function Soporte() {
   const [deps, setDeps] = useState<{ id: number; nombre: string }[]>([]);
   const [error, setError] = useState(false);
   const [abierto, setAbierto] = useState(false);
+  const [chat, setChat] = useState<Ticket | null>(null);
   const [dep, setDep] = useState('');
   const [asunto, setAsunto] = useState('');
   const [dispositivo, setDispositivo] = useState('');
@@ -94,11 +96,18 @@ export default function Soporte() {
                 <div className="sub">{t.departamento} · {t.dispositivo}</div>
                 <div className="txt">{t.descripcion}</div>
                 <div className="nota">Abierto el {fechaCorta(t.fecha_apertura)}</div>
+                <div className="accion">
+                  <button className="btn tonal pequeno" type="button" onClick={() => setChat(t)}>
+                    <Icon nombre="chat" tam={18} />
+                    {t.n_mensajes > 0 ? `Conversación (${t.n_mensajes})` : 'Abrir conversación'}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
+      {chat && <ChatTicket ticket={chat} onClose={() => { setChat(null); cargar(); }} onCambio={cargar} />}
       {abierto && (
         <Modal
           titulo="Nuevo ticket"

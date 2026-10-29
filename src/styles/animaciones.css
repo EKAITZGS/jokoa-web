@@ -146,3 +146,27 @@
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
 @keyframes fundirSolo { from { opacity: 0; } }
+
+/* ---------- Conversación de soporte ---------- */
+.modal.ancho { width: min(680px, 100%); }
+.chat { display: flex; flex-direction: column; gap: 12px; }
+.chat-cab { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.chat-cab .secundario { color: var(--texto-2); font-size: 14px; }
+.chat-cab select { min-height: 38px; padding: 0 10px; border: 1px solid var(--borde-campo); border-radius: 10px; background: var(--superficie); font-weight: 700; }
+.chat-lista { display: flex; flex-direction: column; gap: 10px; max-height: min(52vh, 460px); min-height: 220px; overflow-y: auto; padding: 14px; border-radius: 14px; background: var(--fondo); }
+.burbuja-fila { display: flex; animation: burbuja 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.burbuja-fila.propia { justify-content: flex-end; }
+.burbuja { max-width: 82%; padding: 10px 14px; border: 1px solid var(--borde); border-radius: 16px 16px 16px 4px; background: var(--superficie); }
+.burbuja-fila.propia .burbuja { border-radius: 16px 16px 4px 16px; border-color: transparent; background: var(--azul-claro); }
+.burbuja.soporte { border-color: var(--azul); }
+.burbuja .quien { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; color: var(--azul); font-size: 12px; font-weight: 700; }
+.burbuja .etiqueta-soporte { padding: 1px 8px; border-radius: 999px; background: var(--azul); color: #fff; font-size: 10px; letter-spacing: 0.03em; text-transform: uppercase; }
+.burbuja .texto { white-space: pre-wrap; word-break: break-word; }
+.burbuja .hora { margin-top: 4px; color: var(--texto-2); font-size: 11px; text-align: right; }
+.chat-entrada { display: flex; align-items: flex-end; gap: 10px; }
+.chat-entrada textarea { flex: 1; min-height: 52px; max-height: 140px; padding: 14px 16px; border: 1px solid var(--borde-campo); border-radius: 14px; background: var(--superficie); font: inherit; resize: none; outline: none; }
+.chat-entrada textarea:focus { border: 2px solid var(--azul); padding: 13px 15px; }
+.chat-entrada .btn { flex: none; width: 52px; min-height: 52px; padding: 0; border-radius: 50%; }
+.chat-cerrado { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 12px; background: var(--exito-tenue); color: var(--exito); font-size: 14px; font-weight: 500; }
+@keyframes burbuja { from { opacity: 0; transform: translateY(10px) scale(0.97); } }
+@media (prefers-reduced-motion: reduce) { .burbuja-fila { animation: fundirSolo 0.2s ease-out both !important; } }

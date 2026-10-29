@@ -79,6 +79,16 @@ export interface Ticket {
   estado: 'abierto' | 'en_proceso' | 'cerrado';
   fecha_apertura: string;
   fecha_cierre: string | null;
+  n_mensajes: number;
+}
+
+export interface Mensaje {
+  id: number;
+  usuario_id: number;
+  autor: string;
+  es_admin: boolean;
+  texto: string;
+  fecha: string;
 }
 
 export interface Tienda {
