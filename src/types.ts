@@ -15,9 +15,14 @@ export interface Producto {
   marca?: string;
   almacenamiento_gb?: number;
   ram_gb?: number;
+  garantias?: { meses: number; precio: number }[]; // garantía ampliada (móviles, tablets y ordenadores)
+  // artículo (ordenadores, tablets y zona gaming)
+  categoria?: string;
+  montaje?: number;
+  caracteristicas?: Record<string, unknown>;
 }
 
-export type Tipo = 'videojuegos' | 'moviles';
+export type Tipo = 'videojuegos' | 'moviles' | 'articulos';
 
 export interface Usuario {
   id: number;
@@ -44,6 +49,8 @@ export interface Linea {
   nombre: string;
   cantidad: number;
   precio_unitario: number;
+  garantia_meses?: number | null;
+  precio_garantia?: number;
 }
 
 export interface Compra {
@@ -52,6 +59,8 @@ export interface Compra {
   usuario?: string;
   fecha: string;
   total: number;
+  tienda_id?: number | null;
+  tienda?: string | null;
   lineas: Linea[];
 }
 
@@ -76,7 +85,10 @@ export interface Ticket {
   asunto: string;
   descripcion: string;
   dispositivo: string;
-  estado: 'abierto' | 'en_proceso' | 'cerrado';
+  tipo: 'soporte' | 'reparacion';
+  estado: 'abierto' | 'en_proceso' | 'cerrado' | 'recibido' | 'presupuestado' | 'en_reparacion' | 'listo';
+  presupuesto: number | null;
+  presupuesto_aceptado: boolean | null; // null = el cliente aún no ha respondido
   fecha_apertura: string;
   fecha_cierre: string | null;
   n_mensajes: number;

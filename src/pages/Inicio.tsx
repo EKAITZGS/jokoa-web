@@ -42,6 +42,8 @@ export default function Inicio() {
                 <>
                   <Link className="btn grande" to="/juegos">Ver juegos</Link>
                   <Link className="btn grande tonal" to="/moviles">Ver móviles</Link>
+                  <Link className="btn grande tonal" to="/ordenadores">Ordenadores</Link>
+                  <Link className="btn grande tonal" to="/gaming">Zona gaming</Link>
                 </>
               ) : (
                 <>

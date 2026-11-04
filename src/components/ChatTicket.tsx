@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { api, ApiError } from '../api';
 import { useAuth } from '../auth';
-import { fechaCorta } from '../format';
+import { ESTADOS_TICKET, ETIQUETA_ESTADO, fechaCorta } from '../format';
 import { useNotif } from '../notificaciones';
 import { useToast } from '../toast';
 import type { Mensaje, Ticket } from '../types';
 import Icon from './Icon';
 import Modal from './Modal';
-
-const ESTADOS: Record<Ticket['estado'], string> = { abierto: 'Abierto', en_proceso: 'En curso', cerrado: 'Cerrado' };
 
 // Conversación de un ticket: el cliente y los administradores se escriben como en un chat
 export default function ChatTicket({ ticket, onClose, onCambio }: { ticket: Ticket; onClose: () => void; onCambio?: () => void }) {
@@ -88,12 +86,12 @@ export default function ChatTicket({ ticket, onClose, onCambio }: { ticket: Tick
           <span className="secundario">{ticket.departamento} · {ticket.dispositivo}{esAdmin && ticket.usuario ? ` · ${ticket.usuario}` : ''}</span>
           {esAdmin ? (
             <select value={estado} onChange={(e) => cambiarEstado(e.target.value as Ticket['estado'])} aria-label="Estado del ticket">
-              {Object.entries(ESTADOS).map(([v, t]) => (
-                <option key={v} value={v}>{t}</option>
+              {ESTADOS_TICKET[ticket.tipo].map((v) => (
+                <option key={v} value={v}>{ETIQUETA_ESTADO[v]}</option>
               ))}
             </select>
           ) : (
-            <span className={'chip' + (cerrado ? ' exito' : estado === 'abierto' ? ' coral' : '')}>{ESTADOS[estado]}</span>
+            <span className={'chip' + (cerrado ? ' exito' : estado === 'abierto' ? ' coral' : '')}>{ETIQUETA_ESTADO[estado]}</span>
           )}
         </div>
         <div className="chat-lista" role="log" aria-live="polite">

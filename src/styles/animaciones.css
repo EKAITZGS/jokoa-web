@@ -178,4 +178,4 @@
 .admin-lateral .insignia { margin-left: auto; }
 .fila-pedido.nuevo { border-color: var(--coral-oscuro); box-shadow: 0 0 0 1px var(--coral-oscuro), var(--sombra-1); }
 .tabla tr.fila-nueva td { background: var(--coral-tenue); }
-.tabla tr.fila-nueva:hover td { background: #fbe4d9; }
+.tabla tr.fila-nueva:hover td { background: var(--coral-tenue); }

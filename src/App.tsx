@@ -8,8 +8,12 @@ import TiendasAdmin from './admin/TiendasAdmin';
 import UsuariosAdmin from './admin/UsuariosAdmin';
 import { useAuth } from './auth';
 import Layout from './components/Layout';
+import Articulos from './pages/Articulos';
+import Buscar from './pages/Buscar';
 import Carrito from './pages/Carrito';
 import Catalogo from './pages/Catalogo';
+import Comparar from './pages/Comparar';
+import Favoritos from './pages/Favoritos';
 import Ficha from './pages/Ficha';
 import Inicio from './pages/Inicio';
 import Login from './pages/Login';
@@ -62,6 +66,12 @@ export default function App() {
         <Route element={<SoloConSesion />}>
           <Route path="/juegos" element={<Catalogo tipo="videojuegos" />} />
           <Route path="/moviles" element={<Catalogo tipo="moviles" />} />
+          <Route path="/ordenadores" element={<Articulos seccion="ordenadores" />} />
+          <Route path="/tablets" element={<Articulos seccion="tablets" />} />
+          <Route path="/gaming" element={<Articulos seccion="gaming" />} />
+          <Route path="/buscar" element={<Buscar />} />
+          <Route path="/favoritos" element={<Favoritos />} />
+          <Route path="/comparar" element={<Comparar />} />
           <Route path="/producto/:tipo/:id" element={<Ficha />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/pedidos" element={<Pedidos />} />

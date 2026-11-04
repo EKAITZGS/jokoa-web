@@ -61,7 +61,20 @@ async function peticion<T>(metodo: string, ruta: string, cuerpo?: unknown, formu
   return datos as T;
 }
 
+// Descarga un archivo (p. ej. una factura PDF) con el token de la sesión
+async function archivo(ruta: string): Promise<Blob> {
+  let res: Response;
+  try {
+    res = await fetch('/ws' + ruta, { headers: { Authorization: `Bearer ${token.get() ?? ''}` } });
+  } catch {
+    throw new ApiError('No se pudo conectar con el servidor', 0);
+  }
+  if (!res.ok) throw new ApiError(res.status === 404 ? 'No se encontró el documento' : 'No se pudo descargar el documento', res.status);
+  return res.blob();
+}
+
 export const api = {
+  archivo,
   get: <T,>(ruta: string) => peticion<T>('GET', ruta),
   post: <T,>(ruta: string, cuerpo: unknown) => peticion<T>('POST', ruta, cuerpo),
   put: <T,>(ruta: string, cuerpo: unknown = {}) => peticion<T>('PUT', ruta, cuerpo),

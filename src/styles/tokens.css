@@ -29,3 +29,53 @@
 
   font-family: 'Roboto', system-ui, sans-serif;
 }
+
+/* Modo oscuro: sigue al sistema, salvo que la persona elija tema a mano (data-tema en <html>) */
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+  --azul: #3b82c8;
+  --azul-noche: #cfe3f8;
+  --azul-claro: #21436b;
+  --azul-tenue: #1b2d45;
+  --coral: #e0693f;
+  --coral-oscuro: #d9623a;
+  --coral-pulsado: #b94e28;
+  --coral-tenue: #3a2219;
+  --fondo: #0e1621;
+  --superficie: #172131;
+  --texto: #e6ecf5;
+  --texto-2: #9fb0c7;
+  --borde: #2b3a51;
+  --borde-campo: #7f90a8;
+  --gris: #2a3649;
+  --exito: #62d197;
+  --exito-tenue: #17382a;
+  --sombra-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --sombra-2: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.4);
+  --sombra-3: 0 8px 16px rgba(0, 0, 0, 0.5), 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    color-scheme: dark;
+    --azul: #3b82c8;
+    --azul-noche: #cfe3f8;
+    --azul-claro: #21436b;
+    --azul-tenue: #1b2d45;
+    --coral: #e0693f;
+    --coral-oscuro: #d9623a;
+    --coral-pulsado: #b94e28;
+    --coral-tenue: #3a2219;
+    --fondo: #0e1621;
+    --superficie: #172131;
+    --texto: #e6ecf5;
+    --texto-2: #9fb0c7;
+    --borde: #2b3a51;
+    --borde-campo: #7f90a8;
+    --gris: #2a3649;
+    --exito: #62d197;
+    --exito-tenue: #17382a;
+    --sombra-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+    --sombra-2: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.4);
+    --sombra-3: 0 8px 16px rgba(0, 0, 0, 0.5), 0 16px 40px rgba(0, 0, 0, 0.5);
+  }
+}

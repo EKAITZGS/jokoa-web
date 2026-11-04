@@ -10,14 +10,16 @@ import type { Alquiler, Compra } from '../types';
 export default function Pedidos() {
   const { state } = useLocation();
   const [compras, setCompras] = useState(state?.pestana !== 'alquileres');
-  const [lista, setLista] = useState<Compra[] | Alquiler[] | null>(null);
+  const [guardada, setLista] = useState<{ compras: boolean; datos: Compra[] | Alquiler[] } | null>(null);
+  // Al cambiar de pestaña, la lista anterior es de otro tipo hasta que llega la nueva: no se pinta
+  const lista = guardada && guardada.compras === compras ? guardada.datos : null;
   const [error, setError] = useState(false);
   const aviso = useToast();
 
   const cargar = useCallback(async () => {
     setError(false);
     try {
-      setLista(await api.get(compras ? '/compras' : '/alquileres'));
+      setLista({ compras, datos: await api.get(compras ? '/compras' : '/alquileres') });
     } catch {
       setError(true);
     }
@@ -27,6 +29,16 @@ export default function Pedidos() {
     setLista(null);
     cargar();
   }, [cargar]);
+
+  // La factura la genera el servidor; se abre en otra pestaña con el visor de PDF del navegador
+  const factura = async (id: number) => {
+    try {
+      const pdf = await api.archivo(`/compras/${id}/factura`);
+      window.open(URL.createObjectURL(pdf), '_blank');
+    } catch (e) {
+      aviso(e instanceof ApiError ? e.message : 'No se pudo descargar la factura');
+    }
+  };
 
   const devolver = async (id: number) => {
     try {
@@ -60,7 +72,9 @@ export default function Pedidos() {
                       <h3>Compra #{c.id} · {fechaCorta(c.fecha)}</h3>
                       <span className="derecha">{euros(c.total)}</span>
                     </div>
-                    <div className="txt">{c.lineas.map((l) => `${l.cantidad} × ${l.nombre}`).join('\n')}</div>
+                    <div className="txt">{c.lineas.map((l) => `${l.cantidad} × ${l.nombre}${l.garantia_meses ? ` · garantía +${l.garantia_meses} meses` : ''}`).join('\n')}</div>
+                    {c.tienda && <div className="nota" style={{ marginTop: 6 }}>Recogida en tienda: {c.tienda}</div>}
+                    <div className="accion"><button className="btn pequeno tonal" type="button" onClick={() => factura(c.id)}>Factura PDF</button></div>
                   </div>
                 ))
               : (lista as Alquiler[]).map((a, i) => (

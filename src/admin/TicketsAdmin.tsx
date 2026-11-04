@@ -4,7 +4,7 @@ import { Barra, ErrorEstado } from '../components/Estados';
 import Icon from '../components/Icon';
 import ChatTicket from '../components/ChatTicket';
 import Modal from '../components/Modal';
-import { fechaCorta } from '../format';
+import { ESTADOS_TICKET, ETIQUETA_ESTADO, fechaCorta } from '../format';
 import { useToast } from '../toast';
 import type { Ticket } from '../types';
 
@@ -29,14 +29,22 @@ export default function TicketsAdmin() {
     cargar();
   }, [cargar]);
 
-  const cambiarEstado = async (t: Ticket, estado: Ticket['estado']) => {
+  const cambiarEstado = async (t: Ticket, estado: Ticket['estado'], presupuesto: number | null = t.presupuesto) => {
     try {
-      await api.put(`/tickets/update/${t.id}`, { departamento_id: t.departamento_id, asunto: t.asunto, descripcion: t.descripcion, dispositivo: t.dispositivo, estado });
+      await api.put(`/tickets/update/${t.id}`, { departamento_id: t.departamento_id, asunto: t.asunto, descripcion: t.descripcion, dispositivo: t.dispositivo, estado, presupuesto });
       aviso('Estado actualizado');
       cargar();
     } catch (e) {
       aviso(e instanceof ApiError ? e.message : 'No se pudo cambiar el estado');
     }
+  };
+
+  // Presupuesto que el administrador escribe para cada reparación antes de enviarlo al cliente
+  const [presupuestos, setPresupuestos] = useState<Record<number, string>>({});
+  const enviarPresupuesto = (t: Ticket) => {
+    const valor = Number(presupuestos[t.id] ?? t.presupuesto ?? '');
+    if (!Number.isFinite(valor) || valor <= 0) return aviso('Escribe un presupuesto mayor que 0');
+    cambiarEstado(t, 'presupuestado', valor);
   };
 
   const borrar = async () => {
@@ -54,7 +62,7 @@ export default function TicketsAdmin() {
     }
   };
 
-  const visibles = (lista ?? []).filter((t) => !filtro || t.estado === filtro);
+  const visibles = (lista ?? []).filter((t) => !filtro || (filtro === 'reparacion' ? t.tipo === 'reparacion' : t.estado === filtro));
 
   return (
     <>
@@ -66,7 +74,7 @@ export default function TicketsAdmin() {
         </div>
       </div>
       <div className="pestanas" role="tablist" style={{ marginBottom: 16 }}>
-        {[['', 'Todos'], ['abierto', 'Abiertos'], ['en_proceso', 'En curso'], ['cerrado', 'Cerrados']].map(([v, t]) => (
+        {[['', 'Todos'], ['reparacion', 'Reparaciones'], ['abierto', 'Abiertos'], ['en_proceso', 'En curso'], ['cerrado', 'Cerrados']].map(([v, t]) => (
           <button key={v} type="button" role="tab" aria-selected={filtro === v} className={filtro === v ? 'activa' : ''} onClick={() => setFiltro(v)}>{t}</button>
         ))}
       </div>
@@ -85,10 +93,17 @@ export default function TicketsAdmin() {
                     <td>{t.departamento}</td>
                     <td>
                       <select value={t.estado} onChange={(e) => cambiarEstado(t, e.target.value as Ticket['estado'])} aria-label={`Estado de ${t.asunto}`}>
-                        <option value="abierto">Abierto</option>
-                        <option value="en_proceso">En curso</option>
-                        <option value="cerrado">Cerrado</option>
+                        {ESTADOS_TICKET[t.tipo].map((e) => <option key={e} value={e}>{ETIQUETA_ESTADO[e]}</option>)}
                       </select>
+                      {t.tipo === 'reparacion' && (
+                        <div style={{ marginTop: 8 }}>
+                          <div style={{ display: 'flex', gap: 6 }}>
+                            <input type="number" min="0" step="0.01" style={{ width: 96 }} placeholder="€" aria-label={`Presupuesto de ${t.asunto}`} value={presupuestos[t.id] ?? t.presupuesto ?? ''} onChange={(e) => setPresupuestos({ ...presupuestos, [t.id]: e.target.value })} />
+                            <button className="btn pequeno tonal" type="button" disabled={t.estado === 'cerrado' || t.estado === 'listo'} onClick={() => enviarPresupuesto(t)}>Enviar presupuesto</button>
+                          </div>
+                          {t.presupuesto !== null && <div className="secundario">{t.presupuesto_aceptado === true ? 'Aceptado por el cliente' : t.presupuesto_aceptado === false ? 'Rechazado por el cliente' : 'Esperando respuesta del cliente'}</div>}
+                        </div>
+                      )}
                     </td>
                     <td>{fechaCorta(t.fecha_apertura)}</td>
                     <td>

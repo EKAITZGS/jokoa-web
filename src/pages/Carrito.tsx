@@ -1,24 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api, ApiError } from '../api';
-import { useCart } from '../cart';
+import { precioGarantia, useCart } from '../cart';
+import { Selector } from '../components/Campos';
 import { Vacio } from '../components/Estados';
 import Icon from '../components/Icon';
 import { useContador } from '../efectos';
-import { esMovil, euros } from '../format';
+import { contenida, euros, rutaTipo } from '../format';
 import { useToast } from '../toast';
 
 export default function Carrito() {
-  const { lineas, unidades, total, cambiar, quitar, vaciar } = useCart();
+  const { lineas, unidades, total, cambiar, quitar, garantia, vaciar } = useCart();
   const [ocupado, setOcupado] = useState(false);
   const aviso = useToast();
   const navegar = useNavigate();
   const totalAnim = useContador(total, 600, 2);
 
+  const [tiendas, setTiendas] = useState<{ id: number; nombre: string; direccion: string; horario: string }[]>([]);
+  const [tienda, setTienda] = useState('');
+  useEffect(() => {
+    api.get<typeof tiendas>('/tiendas').then(setTiendas).catch(() => {});
+  }, []);
+
   const comprar = async () => {
+    if (!tienda) return aviso('Elige la tienda donde quieres recoger tu pedido');
     setOcupado(true);
     try {
-      await api.post('/compras/add', { lineas: lineas.map((l) => ({ producto_id: l.producto.id, cantidad: l.cantidad })) });
+      await api.post('/compras/add', { tienda_id: Number(tienda), lineas: lineas.map((l) => ({ producto_id: l.producto.id, cantidad: l.cantidad, garantia_meses: l.garantia ?? null })) });
       vaciar();
       aviso('¡Compra realizada!');
       navegar('/pedidos');
@@ -44,31 +52,45 @@ export default function Carrito() {
       ) : (
         <div className="carrito">
           <div>
-            {lineas.map(({ producto: p, cantidad }) => (
+            {lineas.map((l) => { const { producto: p, cantidad } = l; return (
               <div key={p.id} className="tarjeta linea-carrito">
-                <img className={esMovil(p) ? 'movil' : ''} src={p.imagenes[0]} alt={p.nombre} />
+                <img className={contenida(p) ? 'movil' : ''} src={p.imagenes[0]} alt={p.nombre} />
                 <div>
-                  <h3><Link to={`/producto/${esMovil(p) ? 'moviles' : 'videojuegos'}/${p.id}`}>{p.nombre}</Link></h3>
+                  <h3><Link to={`/producto/${rutaTipo(p)}/${p.id}`}>{p.nombre}</Link></h3>
                   <div className="sub">{euros(p.precio)} la unidad · quedan {p.stock}</div>
                   <div className="cantidad" style={{ marginTop: 10 }}>
                     <button type="button" onClick={() => cambiar(p.id, cantidad - 1)} aria-label="Una menos">−</button>
                     <span key={cantidad}>{cantidad}</span>
                     <button type="button" onClick={() => cambiar(p.id, cantidad + 1)} aria-label="Una más">+</button>
                   </div>
+                  {p.garantias && p.garantias.length > 0 && (
+                    <label className="garantia" style={{ display: 'block', marginTop: 10 }}>
+                      Garantía ampliada{' '}
+                      <select value={l.garantia ?? ''} onChange={(e) => garantia(p.id, e.target.value ? Number(e.target.value) : null)}>
+                        <option value="">Sin ampliar (garantía legal)</option>
+                        {p.garantias.map((g) => <option key={g.meses} value={g.meses}>+{g.meses} meses · {euros(g.precio)} por unidad</option>)}
+                      </select>
+                    </label>
+                  )}
                 </div>
                 <div className="fin">
-                  <span className="precio">{euros(p.precio * cantidad)}</span>
+                  <span className="precio">{euros((p.precio + precioGarantia(l)) * cantidad)}</span>
                   <button className="icono-btn peligro" type="button" onClick={() => quitar(p.id)} aria-label={`Quitar ${p.nombre}`}>
                     <Icon nombre="basura" />
                   </button>
                 </div>
               </div>
-            ))}
+            ); })}
           </div>
           <aside className="tarjeta resumen">
             <h2>Resumen</h2>
             <div className="fila"><span>Productos</span><span>{unidades}</span></div>
             <div className="fila total"><span>Total</span><span>{euros(totalAnim)}</span></div>
+            <Selector etiqueta="Recoger en tienda" value={tienda} onChange={setTienda}>
+              <option value="">Elige una tienda…</option>
+              {tiendas.map((t) => <option key={t.id} value={t.id}>{t.nombre}</option>)}
+            </Selector>
+            {tienda && <div className="nota" style={{ margin: '6px 4px 12px' }}>{tiendas.find((t) => String(t.id) === tienda)?.direccion} · {tiendas.find((t) => String(t.id) === tienda)?.horario}</div>}
             <button className="btn grande bloque" type="button" disabled={ocupado} onClick={comprar}>Finalizar compra</button>
             <button className="btn fantasma bloque" type="button" style={{ marginTop: 8 }} onClick={vaciar}>Vaciar carrito</button>
           </aside>

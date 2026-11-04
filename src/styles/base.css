@@ -75,7 +75,7 @@ button { cursor: pointer; }
 
 /* ---------- Avisos y diálogos ---------- */
 .avisos { position: fixed; left: 20px; bottom: 20px; z-index: 3000; display: grid; gap: 8px; }
-.aviso { max-width: 340px; padding: 14px 18px; border-radius: 12px; background: var(--texto); color: #fff; font-size: 14px; box-shadow: var(--sombra-2); animation: entra 220ms ease-out; }
+.aviso { max-width: 340px; padding: 14px 18px; border-radius: 12px; background: var(--texto); color: var(--fondo); font-size: 14px; box-shadow: var(--sombra-2); animation: entra 220ms ease-out; }
 .modal-fondo { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, 0.55); animation: fundir 200ms ease-out; }
 .modal { width: min(560px, 100%); max-height: calc(100vh - 32px); overflow: auto; border-radius: var(--r-tarjeta); background: var(--superficie); box-shadow: var(--sombra-3); animation: modal 220ms ease-out; }
 .modal.estrecho { width: min(380px, 100%); }
@@ -90,3 +90,15 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 150ms !important; animation-delay: 0ms !important; transition-duration: 0ms !important; }
 }
+
+/* ---------- Desplegable propio (Selector) ---------- */
+.selector-btn { display: block; width: 100%; min-height: 56px; padding: 22px 44px 8px 16px; border: 1px solid var(--borde-campo); border-radius: var(--r-campo); background: var(--superficie) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%235b6b82' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 12px center; color: var(--texto); font-size: 16px; text-align: left; cursor: pointer; outline: none; transition: border-color 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.selector-btn:focus-visible, .selector.abierto .selector-btn { border: 2px solid var(--azul); padding-left: 15px; }
+.selector .selector-btn + label { top: -9px; background: var(--superficie); border-radius: 4px; font-size: 12px; }
+.selector .selector-btn:focus-visible + label, .selector.abierto .selector-btn + label { color: var(--azul); }
+.selector.abierto .selector-btn { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%235b6b82' d='M7 14l5-5 5 5z'/%3E%3C/svg%3E"); }
+.selector-lista { position: absolute; z-index: 90; top: calc(100% + 6px); left: 0; right: 0; max-height: 260px; margin: 0; padding: 6px; overflow-y: auto; list-style: none; border: 1px solid var(--borde); border-radius: 14px; background: var(--superficie); box-shadow: var(--sombra-3); animation: fundir 120ms ease-out; }
+.selector-lista li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border-radius: 8px; cursor: pointer; }
+.selector-lista li.activo { background: var(--azul-tenue); }
+.selector-lista li.elegido { color: var(--azul); font-weight: 700; }
+.selector-lista li[aria-disabled] { opacity: 0.5; cursor: not-allowed; }

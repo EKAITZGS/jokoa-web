@@ -8,6 +8,8 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './auth';
 import { CartProvider } from './cart';
+import { CompararProvider } from './comparar';
+import { FavProvider } from './favoritos';
 import { NotifProvider } from './notificaciones';
 import { ToastProvider } from './toast';
 import './styles/tokens.css';
@@ -16,6 +18,9 @@ import './styles/tienda.css';
 import './styles/admin.css';
 import './styles/animaciones.css';
 import { sinMovimiento } from './efectos';
+import { aplicarTema } from './tema';
+
+aplicarTema();
 
 // Onda al pulsar botones: nace en el punto exacto del clic
 document.addEventListener('pointerdown', (e) => {
@@ -37,7 +42,11 @@ createRoot(document.getElementById('root')!).render(
         <AuthProvider>
           <NotifProvider>
             <CartProvider>
-              <App />
+              <FavProvider>
+                <CompararProvider>
+                  <App />
+                </CompararProvider>
+              </FavProvider>
             </CartProvider>
           </NotifProvider>
         </AuthProvider>

@@ -75,7 +75,7 @@ export default function PedidosAdmin() {
                     <tr key={c.id}>
                       <td><div className="principal">#{c.id}</div><div className="secundario">{fechaCorta(c.fecha)}</div></td>
                       <td>{c.usuario ?? `Usuario ${c.usuario_id}`}</td>
-                      <td><ul className="lineas">{c.lineas.map((l) => <li key={l.producto_id}>{l.cantidad} × {l.nombre} <span className="secundario">({euros(l.precio_unitario)})</span></li>)}</ul></td>
+                      <td><ul className="lineas">{c.lineas.map((l) => <li key={l.producto_id}>{l.cantidad} × {l.nombre} <span className="secundario">({euros(l.precio_unitario)}{l.garantia_meses ? `, garantía +${l.garantia_meses} m: ${euros(l.precio_garantia ?? 0)}` : ''})</span></li>)}</ul></td>
                       <td className="num principal">{euros(c.total)}</td>
                     </tr>
                   ))}
