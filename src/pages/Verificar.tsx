@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api, ApiError } from '../api';
 import Icon from '../components/Icon';
 
 // Destino del enlace del correo: /verificar?email=...&token=...
 export default function Verificar() {
   const [params] = useSearchParams();
+  const navegar = useNavigate();
   const [estado, setEstado] = useState<'cargando' | 'ok' | 'error'>('cargando');
   const [mensaje, setMensaje] = useState('');
 
@@ -26,6 +27,13 @@ export default function Verificar() {
       });
   }, [params]);
 
+  // Tras verificar pasa solo al login; el botón sigue ahí por si se quiere ir antes
+  useEffect(() => {
+    if (estado !== 'ok') return;
+    const t = setTimeout(() => navegar('/login', { replace: true }), 3000);
+    return () => clearTimeout(t);
+  }, [estado, navegar]);
+
   return (
     <div className="acceso">
       <div className="tarjeta acceso-caja" style={{ textAlign: 'center' }}>
@@ -37,7 +45,7 @@ export default function Verificar() {
           {estado === 'ok' && (
             <>
               <h1 style={{ fontSize: 26 }}>¡Cuenta verificada!</h1>
-              <p>Ya puedes entrar con tu email y tu contraseña.</p>
+              <p>Ya puedes entrar con tu email y tu contraseña. Te llevamos al inicio de sesión en unos segundos…</p>
             </>
           )}
           {estado === 'error' && (
